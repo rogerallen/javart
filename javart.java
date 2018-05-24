@@ -1,6 +1,18 @@
 public class javart {
 
+    static boolean hit_sphere(vec3 center, float radius, ray r) {
+        vec3 oc = r.origin().sub(center);
+        float a = vec3.dot(r.direction(), r.direction());
+        float b = 2.0f * vec3.dot(oc, r.direction());
+        float c = vec3.dot(oc, oc) - radius*radius;
+        float discriminant = b*b - 4*a*c;
+        return (discriminant > 0.0f);
+    }
+
     static vec3 color(ray r) {
+        if(hit_sphere(new vec3(0,0,-1), 0.5f, r)) {
+            return new vec3(1,0,0);
+        }
         vec3 unit_direction = vec3.unit_vector(r.direction());
         float t = 0.5f*(unit_direction.y() + 1.0f);
         vec3 tmp0 = new vec3(1.0f, 1.0f, 1.0f).mul(1.0f-t);
