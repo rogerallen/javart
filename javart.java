@@ -3,8 +3,7 @@ public class javart {
     public static void main(String[] args) {
         int nx = 200;
         int ny = 100;
-        System.out.println("P3");
-        System.out.println(String.format("%d %d 255",nx,ny));
+        System.out.println(String.format("P3\n%d %d\n255",nx,ny));
         for(int j = ny-1; j >= 0; j--) {
             for(int i = 0; i < nx; i++) {
                 float r = (float)i / (float)nx;
