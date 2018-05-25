@@ -17,23 +17,24 @@ public class javart {
     public static void main(String[] args) {
         int nx = 200;
         int ny = 100;
+        int ns = 100;
         System.out.println(String.format("P3\n%d %d\n255",nx,ny));
-        vec3 lower_left_corner = new vec3(-2.0f, -1.0f, -1.0f);
-        vec3 horizontal = new vec3(4.0f, 0.0f, 0.0f);
-        vec3 vertical = new vec3(0.0f, 2.0f, 0.0f);
-        vec3 origin = new vec3(0.0f, 0.0f, 0.0f);
         hitable[] list = {
             new sphere(new vec3(0.0f,0.0f,-1.0f), 0.5f),
             new sphere(new vec3(0.0f,-100.5f,-1.0f), 100.0f)
         };
         hitable_list world = new hitable_list(list);
+        camera cam = new camera();
         for(int j = ny-1; j >= 0; j--) {
             for(int i = 0; i < nx; i++) {
-                float u = (float)i/(float)nx;
-                float v = (float)j/(float)ny;
-                vec3 pos = lower_left_corner.add(horizontal.mul(u)).add(vertical.mul(v));
-                ray r = new ray(origin, pos);
-                vec3 col = color(r,world);
+                vec3 col = new vec3(0.0f, 0.0f, 0.0f);
+                for (int s = 0; s < ns; s++) {
+                    float u = (float)(i + Math.random())/(float)nx;
+                    float v = (float)(j + Math.random())/(float)ny;
+                    ray r = cam.get_ray(u, v);
+                    col = col.add(color(r,world));
+                }
+                col = col.div(ns);
                 int ir = (int)(255.99*col.r());
                 int ig = (int)(255.99*col.g());
                 int ib = (int)(255.99*col.b());
