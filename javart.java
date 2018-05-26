@@ -1,20 +1,16 @@
 public class javart {
 
-    static vec3 random_in_unit_sphere() {
-        vec3 p;
-        do {
-            p = (new vec3((float)Math.random(),(float)Math.random(),(float)Math.random()))
-                .mul(2.0f)
-                .sub(new vec3(1.0f,1.0f,1.0f));
-        } while (p.squared_length() >= 1.0f);
-        return p;
-    }
-
-    static vec3 color(ray r, hitable_list world) {
+    static vec3 color(ray r, hitable_list world, int depth) {
         hit_record rec = new hit_record();
         if(world.hit(r, 0.001f, Float.MAX_VALUE, rec)) {
-            vec3 target = rec.p.add(rec.normal).add(random_in_unit_sphere());
-            return color(new ray(rec.p, target.sub(rec.p)), world).mul(0.5f);
+            ray scattered = new ray(new vec3(), new vec3());
+            vec3 attenuation = new vec3();
+            if (depth < 50 && rec.mat.scatter(r, rec, attenuation, scattered)) {
+                return color(scattered, world, depth+1).mul(attenuation);
+            }
+            else {
+                return new vec3(0.0f,0.0f,0.0f);
+            }
         }
         vec3 unit_direction = vec3.unit_vector(r.direction());
         float t = 0.5f*(unit_direction.y() + 1.0f);
@@ -29,8 +25,14 @@ public class javart {
         int ns = 100;
         System.out.println(String.format("P3\n%d %d\n255",nx,ny));
         hitable[] list = {
-            new sphere(new vec3(0.0f,0.0f,-1.0f), 0.5f),
-            new sphere(new vec3(0.0f,-100.5f,-1.0f), 100.0f)
+            new sphere(new vec3(0.0f,0.0f,-1.0f), 0.5f,
+                       new lambertian(new vec3(0.8f, 0.3f, 0.3f))),
+            new sphere(new vec3(0.0f,-100.5f,-1.0f), 100.0f,
+                       new lambertian(new vec3(0.8f, 0.8f, 0.0f))),
+            new sphere(new vec3(1.0f,0.0f,-1.0f), 0.5f,
+                       new metal(new vec3(0.8f, 0.6f, 0.2f), 1.0f)),
+            new sphere(new vec3(-1.0f,0.0f,-1.0f), 0.5f,
+                       new metal(new vec3(0.8f, 0.8f, 0.8f), 0.3f)),
         };
         hitable_list world = new hitable_list(list);
         camera cam = new camera();
@@ -41,7 +43,7 @@ public class javart {
                     float u = (float)(i + Math.random())/(float)nx;
                     float v = (float)(j + Math.random())/(float)ny;
                     ray r = cam.get_ray(u, v);
-                    col = col.add(color(r,world));
+                    col = col.add(color(r,world,0));
                 }
                 col = col.div(ns);
                 int ir = (int)(255.99*Math.sqrt(col.r()));

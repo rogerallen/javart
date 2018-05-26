@@ -43,6 +43,11 @@ public class vec3 {
         float k = 1.0f/length();
         e[0] *= k; e[1] *= k; e[2] *= k;
     }
+    public void set(vec3 v) {
+        e[0] = v.e[0];
+        e[1] = v.e[1];
+        e[2] = v.e[2];
+    }
 
     public static float dot(vec3 v1, vec3 v2) {
         return v1.e[0] * v2.e[0] + v1.e[1] * v2.e[1] + v1.e[2] * v2.e[2];
@@ -54,5 +59,19 @@ public class vec3 {
     }
     public static vec3 unit_vector(vec3 v){
         return v.div(v.length());
+    }
+
+    public static vec3 random_in_unit_sphere() {
+        vec3 p;
+        do {
+            p = (new vec3((float)Math.random(),(float)Math.random(),(float)Math.random()))
+                .mul(2.0f)
+                .sub(new vec3(1.0f,1.0f,1.0f));
+        } while (p.squared_length() >= 1.0f);
+        return p;
+    }
+
+    public static vec3 reflect(vec3 v, vec3 n) {
+        return v.sub(n.mul(2.0f*dot(v,n)));
     }
 }

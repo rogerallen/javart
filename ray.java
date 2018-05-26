@@ -6,4 +6,8 @@ public class ray {
     public vec3 origin() { return A; }
     public vec3 direction() { return B; }
     public vec3 point_at_paramter(float t) { return A.add(B.mul(t)); }
+    public void set(ray r) {
+        A = r.A;
+        B = r.B;
+    }
 }

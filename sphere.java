@@ -1,8 +1,9 @@
 public class sphere extends hitable {
     vec3 center = new vec3();
     float radius;
+    material mat;
     public sphere() {}
-    public sphere(vec3 cen, float r) { center = cen; radius = r; }
+    public sphere(vec3 cen, float r, material m) { center = cen; radius = r; mat = m; }
     public boolean hit(ray r, float t_min, float t_max, hit_record rec) {
         vec3 oc = r.origin().sub(center);
         float a = vec3.dot(r.direction(), r.direction());
@@ -15,6 +16,7 @@ public class sphere extends hitable {
                 rec.t = temp;
                 rec.p = r.point_at_paramter(rec.t);
                 rec.normal = (rec.p.sub(center)).div(radius);
+                rec.mat = mat;
                 return true;
             }
             temp = (-b + (float)Math.sqrt(b*b-a*c))/a;
@@ -22,6 +24,7 @@ public class sphere extends hitable {
                 rec.t = temp;
                 rec.p = r.point_at_paramter(rec.t);
                 rec.normal = (rec.p.sub(center)).div(radius);
+                rec.mat = mat;
                 return true;
             }
         }
