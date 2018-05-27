@@ -26,13 +26,14 @@ public class javart {
         System.out.println(String.format("P3\n%d %d\n255",nx,ny));
         float R = (float)Math.cos(Math.PI/4.0f);
         hitable[] list = {
+            /*
             new sphere(new vec3(-R,0.0f,-1.0f), R,
                        new lambertian(new vec3(0.0f, 0.0f, 1.0f))),
             new sphere(new vec3(R,0.0f,-1.0f), R,
                        new lambertian(new vec3(1.0f, 0.0f, 0.0f))),
-            /*
+            */
             new sphere(new vec3(0.0f,0.0f,-1.0f), 0.5f,
-                       new lambertian(new vec3(0.8f, 0.3f, 0.3f))),
+                       new lambertian(new vec3(0.1f, 0.2f, 0.5f))),
             new sphere(new vec3(0.0f,-100.5f,-1.0f), 100.0f,
                        new lambertian(new vec3(0.8f, 0.8f, 0.0f))),
             new sphere(new vec3(1.0f,0.0f,-1.0f), 0.5f,
@@ -41,10 +42,12 @@ public class javart {
                        new dielectric(1.5f)),
             new sphere(new vec3(-1.0f,0.0f,-1.0f), -0.45f,
                        new dielectric(1.5f))
-            */
         };
         hitable_list world = new hitable_list(list);
-        camera cam = new camera(90.0f, (float)nx/(float)ny);
+        camera cam = new camera(new vec3(-2.0f, 2.0f, 1.0f),
+                                new vec3( 0.0f, 0.0f,-1.0f),
+                                new vec3( 0.0f, 1.0f, 0.0f),
+                                20.0f, (float)nx/(float)ny);
         for(int j = ny-1; j >= 0; j--) {
             for(int i = 0; i < nx; i++) {
                 vec3 col = new vec3(0.0f, 0.0f, 0.0f);
