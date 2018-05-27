@@ -70,6 +70,15 @@ public class vec3 {
         } while (p.squared_length() >= 1.0f);
         return p;
     }
+    public static vec3 random_in_unit_disk() {
+        vec3 p;
+        do {
+            p = (new vec3((float)Math.random(),(float)Math.random(),0.0f))
+                .mul(2.0f)
+                .sub(new vec3(1.0f, 1.0f, 0.0f));
+        } while (dot(p,p) >= 1.0f);
+        return p;
+    }
 
     public static vec3 reflect(vec3 v, vec3 n) {
         return v.sub(n.mul(2.0f*dot(v,n)));

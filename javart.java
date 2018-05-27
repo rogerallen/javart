@@ -44,10 +44,13 @@ public class javart {
                        new dielectric(1.5f))
         };
         hitable_list world = new hitable_list(list);
-        camera cam = new camera(new vec3(-2.0f, 2.0f, 1.0f),
-                                new vec3( 0.0f, 0.0f,-1.0f),
-                                new vec3( 0.0f, 1.0f, 0.0f),
-                                20.0f, (float)nx/(float)ny);
+        vec3 lookfrom = new vec3(3.0f, 3.0f, 2.0f);
+        vec3 lookat = new vec3( 0.0f, 0.0f,-1.0f);
+        float dist_to_focus = (lookfrom.sub(lookat)).length();
+        float aperture = 2.0f;
+        camera cam = new camera(lookfrom, lookat, new vec3( 0.0f, 1.0f, 0.0f),
+                                20.0f, (float)nx/(float)ny,
+                                aperture, dist_to_focus);
         for(int j = ny-1; j >= 0; j--) {
             for(int i = 0; i < nx; i++) {
                 vec3 col = new vec3(0.0f, 0.0f, 0.0f);
