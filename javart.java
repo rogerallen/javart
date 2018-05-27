@@ -32,6 +32,8 @@ public class javart {
             new sphere(new vec3(1.0f,0.0f,-1.0f), 0.5f,
                        new metal(new vec3(0.8f, 0.6f, 0.2f), 1.0f)),
             new sphere(new vec3(-1.0f,0.0f,-1.0f), 0.5f,
+                       new dielectric(1.5f)),
+            new sphere(new vec3(-1.0f,0.0f,-1.0f), -0.45f,
                        new dielectric(1.5f))
         };
         hitable_list world = new hitable_list(list);
