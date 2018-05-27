@@ -32,7 +32,7 @@ public class javart {
             new sphere(new vec3(1.0f,0.0f,-1.0f), 0.5f,
                        new metal(new vec3(0.8f, 0.6f, 0.2f), 1.0f)),
             new sphere(new vec3(-1.0f,0.0f,-1.0f), 0.5f,
-                       new metal(new vec3(0.8f, 0.8f, 0.8f), 0.3f)),
+                       new dielectric(1.5f))
         };
         hitable_list world = new hitable_list(list);
         camera cam = new camera();
@@ -43,7 +43,8 @@ public class javart {
                     float u = (float)(i + Math.random())/(float)nx;
                     float v = (float)(j + Math.random())/(float)ny;
                     ray r = cam.get_ray(u, v);
-                    col = col.add(color(r,world,0));
+                    vec3 new_col = color(r,world,0);
+                    col = col.add(new_col);
                 }
                 col = col.div(ns);
                 int ir = (int)(255.99*Math.sqrt(col.r()));

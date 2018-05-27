@@ -74,4 +74,16 @@ public class vec3 {
     public static vec3 reflect(vec3 v, vec3 n) {
         return v.sub(n.mul(2.0f*dot(v,n)));
     }
+
+    public static boolean refract(vec3 v, vec3 n, float ni_over_nt, vec3 refracted) {
+        vec3 uv = vec3.unit_vector(v);
+        float dt = vec3.dot(uv, n);
+        float discriminant = 1.0f - ni_over_nt*ni_over_nt*(1.0f-dt*dt);
+        if (discriminant > 0.0f) {
+            refracted.set(uv.sub(n.mul(dt)).mul(ni_over_nt)
+                          .sub(n.mul((float)Math.sqrt(discriminant))));
+            return true;
+        }
+        return false;
+    }
 }
