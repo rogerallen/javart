@@ -5,7 +5,6 @@ public class javart {
     static hitable_list random_scene() {
         // Let's be deterministically random for world creation
         Random rand = new Random(1984);
-        int n = 500;
         hitable[] list = new hitable[500+1];
         list[0] = new sphere(new vec3(0.0f,-1000.0f, 0.0f), 1000.0f,
                              new lambertian(new vec3(0.5f, 0.5f, 0.5f)));
@@ -69,7 +68,6 @@ public class javart {
         int ny = 800;
         int ns = 20;
         System.out.println(String.format("P3\n%d %d\n255",nx,ny));
-        float R = (float)Math.cos(Math.PI/4.0f);
         /*
         hitable[] list = {
             new sphere(new vec3(0.0f,0.0f,-1.0f), 0.5f,
