@@ -1,4 +1,49 @@
+import java.util.Random;
+
 public class javart {
+
+    static hitable_list random_scene() {
+        // Let's be deterministically random for world creation
+        Random rand = new Random(1984);
+        int n = 500;
+        hitable[] list = new hitable[500+1];
+        list[0] = new sphere(new vec3(0.0f,-1000.0f, 0.0f), 1000.0f,
+                             new lambertian(new vec3(0.5f, 0.5f, 0.5f)));
+        int i = 1;
+        for(int a = -11; a < 11; a++) {
+            for(int b = -11; b < 11; b++) {
+                float choose_mat = rand.nextFloat();
+                vec3 center = new vec3((float)(a+0.9*rand.nextFloat()),
+                                       0.2f,
+                                       (float)(b+0.9*rand.nextFloat()));
+                if(center.sub(new vec3(4.0f,0.2f,0.0f)).length() > 0.9f) {
+                    if(choose_mat < 0.8f) {
+                        list[i++] = new sphere(center, 0.2f,
+                                               new lambertian(new vec3((float)(rand.nextFloat()*rand.nextFloat()),
+                                                                       (float)(rand.nextFloat()*rand.nextFloat()),
+                                                                       (float)(rand.nextFloat()*rand.nextFloat()))));
+                    }
+                    else if(choose_mat < 0.95f) {
+                        list[i++] = new sphere(center, 0.2f,
+                                               new metal(new vec3((float)(0.5*(1+rand.nextFloat())),
+                                                                  (float)(0.5*(1+rand.nextFloat())),
+                                                                  (float)(0.5*(1+rand.nextFloat()))),
+                                                         (float)(0.5*rand.nextFloat())));
+                    }
+                    else {
+                        list[i++] = new sphere(center, 0.2f, new dielectric(1.5f));
+                    }
+                }
+            }
+        }
+
+        list[i++] = new sphere(new vec3( 0.0f, 1.0f, 0.0f), 1.0f, new dielectric(1.5f));
+        list[i++] = new sphere(new vec3(-4.0f, 1.0f, 0.0f), 1.0f, new lambertian(new vec3(0.5f, 0.2f, 0.1f)));
+        list[i++] = new sphere(new vec3( 4.0f, 1.0f, 0.0f), 1.0f, new metal(new vec3(0.7f, 0.6f, 0.5f), 0.0f));
+
+        return new hitable_list(list, i);
+
+    }
 
     static vec3 color(ray r, hitable_list world, int depth) {
         hit_record rec = new hit_record();
@@ -20,18 +65,13 @@ public class javart {
     }
 
     public static void main(String[] args) {
-        int nx = 200;
-        int ny = 100;
-        int ns = 100;
+        int nx = 1200;
+        int ny = 800;
+        int ns = 20;
         System.out.println(String.format("P3\n%d %d\n255",nx,ny));
         float R = (float)Math.cos(Math.PI/4.0f);
+        /*
         hitable[] list = {
-            /*
-            new sphere(new vec3(-R,0.0f,-1.0f), R,
-                       new lambertian(new vec3(0.0f, 0.0f, 1.0f))),
-            new sphere(new vec3(R,0.0f,-1.0f), R,
-                       new lambertian(new vec3(1.0f, 0.0f, 0.0f))),
-            */
             new sphere(new vec3(0.0f,0.0f,-1.0f), 0.5f,
                        new lambertian(new vec3(0.1f, 0.2f, 0.5f))),
             new sphere(new vec3(0.0f,-100.5f,-1.0f), 100.0f,
@@ -43,12 +83,14 @@ public class javart {
             new sphere(new vec3(-1.0f,0.0f,-1.0f), -0.45f,
                        new dielectric(1.5f))
         };
-        hitable_list world = new hitable_list(list);
-        vec3 lookfrom = new vec3(3.0f, 3.0f, 2.0f);
-        vec3 lookat = new vec3( 0.0f, 0.0f,-1.0f);
-        float dist_to_focus = (lookfrom.sub(lookat)).length();
-        float aperture = 2.0f;
-        camera cam = new camera(lookfrom, lookat, new vec3( 0.0f, 1.0f, 0.0f),
+        hitable_list world = new hitable_list(list,list.length);
+        */
+        hitable_list world = random_scene();
+        vec3 lookfrom = new vec3(13.0f, 2.0f, 3.0f);
+        vec3 lookat = new vec3( 0.0f, 0.0f, 0.0f);
+        float dist_to_focus = 10.0f; //(lookfrom.sub(lookat)).length();
+        float aperture = 0.1f;
+        camera cam = new camera(lookfrom, lookat, new vec3(0.0f, 1.0f, 0.0f),
                                 20.0f, (float)nx/(float)ny,
                                 aperture, dist_to_focus);
         for(int j = ny-1; j >= 0; j--) {
